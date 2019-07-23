@@ -5,8 +5,8 @@
 class Azpainter < Formula
   desc "AzPainter"
   homepage ""
-  url "https://github.com/Symbian9/azpainter/archive/v2.1.3.tar.gz"
-  sha256 "c830e6cdf9ae0f739c7477a420ba105116c88f73e8a7b90ff97ac7cbceb7077f"
+  url "https://github.com/Symbian9/azpainter/archive/v2.1.4.tar.gz"
+  sha256 "b52a67b6ea31b84447b9f8172daa75bdc0c004540776ab45912215a688b99db9"
 
   patch :p0 do
     url "https://gist.githubusercontent.com/abcang/a59322e115659d5948a849eaf745b916/raw/0a6ffa3c800c598edf590b90035566984afa54aa/azpainter.diff"
