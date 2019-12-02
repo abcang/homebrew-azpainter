@@ -1,8 +1,8 @@
 class Azpainter < Formula
   desc "AzPainter"
   homepage "https://github.com/abcang/homebrew-azpainter"
-  url "https://github.com/Symbian9/azpainter/archive/v2.1.4.tar.gz"
-  sha256 "b52a67b6ea31b84447b9f8172daa75bdc0c004540776ab45912215a688b99db9"
+  url "https://github.com/Symbian9/azpainter/archive/v2.1.5.tar.gz"
+  sha256 "2ece3a8a8a62e85b08d40bde45f7544f1fb81beff9be61e49f0b8f8e0bd8b022"
 
   depends_on "makeicns" => :build
   depends_on "jpeg-turbo"
