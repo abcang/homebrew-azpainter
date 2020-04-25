@@ -5,18 +5,17 @@ class Azpainter < Formula
   sha256 "a2147e5b2a35280c8bef2afff5ed78c2fdff92544c6790165599b8bba367588b"
 
   depends_on "makeicns" => :build
-  depends_on "jpeg-turbo"
+  depends_on "svg2png" => :build
   depends_on :x11
 
   patch :p0 do
-    url "https://gist.githubusercontent.com/abcang/a59322e115659d5948a849eaf745b916/raw/0a6ffa3c800c598edf590b90035566984afa54aa/azpainter.diff"
-    sha256 "347d587fe9152043a998fccfb124cead02484f4b9b5342fab0615848e6564b15"
+    url "https://gist.githubusercontent.com/abcang/a59322e115659d5948a849eaf745b916/raw/05dbd8f4cdfc26a837fd502c006a2b2d4399e5e6/azpainter.diff"
+    sha256 "fd88a002afb3fe59358105678a5dcbf6c40be14938ee73a456d8f5232211ab23"
   end
 
   def install
     chmod "+x", "./install-sh"
     system "./configure",
-      "--with-freetype-dir=#{MacOS::X11.include}/freetype2",
       "--prefix=#{prefix}"
     system "make"
     system "make", "install"
@@ -24,7 +23,8 @@ class Azpainter < Formula
     app_name = `sed -n '/^Name=/s///p' desktop/azpainter.desktop`.chomp + ".app"
     locale = `defaults read -g AppleLocale | sed 's/@.*$$//g'`.chomp + ".UTF-8"
     system %Q(echo 'do shell script "LANG=#{locale} #{bin}/azpainter >/dev/null 2>&1 &"' | osacompile -o #{app_name})
-    system "makeicns", "-in", "desktop/azpainter.png", "-out", "#{app_name}/Contents/Resources/applet.icns"
+    system "svg2png", "desktop/icons/hicolor/scalable/apps/azpainter.svg", "/tmp/azpainter.png"
+    system "makeicns", "-in", "/tmp/azpainter.png", "-out", "#{appname}/Contents/Resources/applet.icns"
     prefix.install app_name
   end
 
