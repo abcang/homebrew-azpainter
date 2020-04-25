@@ -14,7 +14,6 @@ class Azpainter < Formula
   end
 
   def install
-    chmod "+x", "./install-sh"
     system "./configure",
       "--prefix=#{prefix}"
     system "make"
