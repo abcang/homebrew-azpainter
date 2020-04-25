@@ -15,7 +15,8 @@ class Azpainter < Formula
 
   def install
     system "./configure",
-      "--prefix=#{prefix}"
+      "--prefix=#{prefix}",
+      'LIBS="-lz"'
     system "make"
     system "make", "install"
 
