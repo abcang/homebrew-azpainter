@@ -35,8 +35,8 @@ jobs:
 
     - run: |
         open $(brew --prefix azpainter)/AzPainter.app
-        ps ax
-        sleep 10
+        ps ax | grep azpainter
+        sleep 30
+        ps ax | grep azpainter
         pgrep azpainter
-        ps ax
         pkill azpainter
