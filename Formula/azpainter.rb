@@ -24,7 +24,7 @@ class Azpainter < Formula
     locale = `defaults read -g AppleLocale | sed 's/@.*$$//g'`.chomp + ".UTF-8"
     system %Q(echo 'do shell script "LANG=#{locale} #{bin}/azpainter >/dev/null 2>&1 &"' | osacompile -o #{app_name})
     system "svg2png", "desktop/icons/hicolor/scalable/apps/azpainter.svg", "/tmp/azpainter.png"
-    system "makeicns", "-in", "/tmp/azpainter.png", "-out", "#{appname}/Contents/Resources/applet.icns"
+    system "makeicns", "-in", "/tmp/azpainter.png", "-out", "#{app_name}/Contents/Resources/applet.icns"
     prefix.install app_name
   end
 
