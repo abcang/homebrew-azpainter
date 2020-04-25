@@ -28,6 +28,9 @@ jobs:
 
     - run: brew update
     - run: brew cask install xquartz
+    - run: echo $DISPLAY
+    - run: launchctl load -w /Library/LaunchAgents/org.macosforge.xquartz.startx.plist
+    - run: echo $DISPLAY
 
     - run: brew install --verbose ./Formula/azpainter.rb
 
