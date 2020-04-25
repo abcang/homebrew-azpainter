@@ -28,6 +28,8 @@ jobs:
 
     - run: brew update
     - run: brew cask install xquartz
+    - run: ls -l /usr
+    - run: ls -l /opt
     - run: echo $DISPLAY
     - run: launchctl load -w /Library/LaunchAgents/org.macosforge.xquartz.startx.plist
     - run: echo $DISPLAY
