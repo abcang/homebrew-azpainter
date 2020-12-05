@@ -15,6 +15,7 @@ install:
   - brew update
   - brew cask install xquartz
 script:
+  - echo $DISPLAY
   - brew install --verbose ./Formula/azpainter.rb
   - open $(brew --prefix azpainter)/AzPainter.app
   - sleep 10
