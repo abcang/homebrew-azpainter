@@ -4,9 +4,10 @@ class Azpainter < Formula
   url "https://github.com/Symbian9/azpainter/archive/v2.1.6.tar.gz"
   sha256 "a2147e5b2a35280c8bef2afff5ed78c2fdff92544c6790165599b8bba367588b"
 
-  depends_on "makeicns" => :build
   depends_on "svg2png" => :build
   depends_on :x11
+
+  uses_from_macos "zlib"
 
   patch :p0 do
     url "https://gist.githubusercontent.com/abcang/a59322e115659d5948a849eaf745b916/raw/05dbd8f4cdfc26a837fd502c006a2b2d4399e5e6/azpainter.diff"
@@ -14,17 +15,33 @@ class Azpainter < Formula
   end
 
   def install
-    system "./configure",
-      "--prefix=#{prefix}",
-      'LIBS="-lz"'
+    system "./configure", "--prefix=#{prefix}"
     system "make"
     system "make", "install"
 
     app_name = `sed -n '/^Name=/s///p' desktop/applications/azpainter.desktop`.chomp + ".app"
     locale = `defaults read -g AppleLocale | sed 's/@.*$$//g'`.chomp + ".UTF-8"
     system %Q(echo 'do shell script "LANG=#{locale} #{bin}/azpainter >/dev/null 2>&1 &"' | osacompile -o #{app_name})
-    system "svg2png", "desktop/icons/hicolor/scalable/apps/azpainter.svg", "/tmp/azpainter.png"
-    system "makeicns", "-in", "/tmp/azpainter.png", "-out", "#{app_name}/Contents/Resources/applet.icns"
+
+    system "svg2png", "desktop/icons/hicolor/scalable/apps/azpainter.svg", "/tmp/azpainter_1024.png"
+    system "mkdir", "/tmp/azpainter.iconset"
+    system "sips", "-z", "16", "16",   "/tmp/azpainter_1024.png", "--out", "/tmp/azpainter.iconset/icon_16x16.png"
+    system "sips", "-z", "32", "32",   "/tmp/azpainter_1024.png", "--out", "/tmp/azpainter.iconset/icon_16x16@2x.png"
+    system "sips", "-z", "32", "32",   "/tmp/azpainter_1024.png", "--out", "/tmp/azpainter.iconset/icon_32x32.png"
+    system "sips", "-z", "64", "64",   "/tmp/azpainter_1024.png", "--out", "/tmp/azpainter.iconset/icon_32x32@2x.png"
+    system "sips", "-z", "128", "128", "/tmp/azpainter_1024.png", "--out", "/tmp/azpainter.iconset/icon_128x128.png"
+    system "sips", "-z", "256", "256", "/tmp/azpainter_1024.png", "--out", "/tmp/azpainter.iconset/icon_128x128@2x.png"
+    system "sips", "-z", "256", "256", "/tmp/azpainter_1024.png", "--out", "/tmp/azpainter.iconset/icon_256x256.png"
+    system "sips", "-z", "512", "512", "/tmp/azpainter_1024.png", "--out", "/tmp/azpainter.iconset/icon_256x256@2x.png"
+    system "sips", "-z", "512", "512", "/tmp/azpainter_1024.png", "--out", "/tmp/azpainter.iconset/icon_512x512.png"
+    system "cp", "/tmp/azpainter_1024.png", "/tmp/azpainter.iconset/icon_512x512@2x.png"
+    system "iconutil", "-c", "icns", "/tmp/azpainter.iconset"
+    system "cp", "/tmp/azpainter.icns", "#{app_name}/Contents/Resources/applet.icns"
+
+    system "rm", "-R", "/tmp/azpainter.iconset"
+    system "rm", "/tmp/azpainter.icns"
+    system "rm", "/tmp/azpainter_1024.png"
+
     prefix.install app_name
   end
 
