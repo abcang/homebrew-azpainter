@@ -3,6 +3,7 @@ class Azpainter < Formula
   homepage "https://github.com/abcang/homebrew-azpainter"
   url "https://github.com/Symbian9/azpainter/archive/v2.1.6.tar.gz"
   sha256 "a2147e5b2a35280c8bef2afff5ed78c2fdff92544c6790165599b8bba367588b"
+  revision 1
 
   depends_on "svg2png" => :build
   depends_on :x11
