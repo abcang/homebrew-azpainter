@@ -17,8 +17,8 @@ class Azpainter < Formula
   uses_from_macos "zlib"
 
   patch :p0 do
-    url "https://gist.githubusercontent.com/abcang/a59322e115659d5948a849eaf745b916/raw/05dbd8f4cdfc26a837fd502c006a2b2d4399e5e6/azpainter.diff"
-    sha256 "fd88a002afb3fe59358105678a5dcbf6c40be14938ee73a456d8f5232211ab23"
+    url "https://gist.githubusercontent.com/abcang/a59322e115659d5948a849eaf745b916/raw/1a51bce4c7ee8e1b364e0c16a89309b92dc76339/azpainter.diff"
+    sha256 "8a5651b330e526b4d31435d472f8dbb02d355c86d71ee7ace0dfb7bf95a2acca"
   end
 
   def install
