@@ -13,7 +13,7 @@ matrix:
       # macOS 10.14
 install:
   - brew update
-  - brew cask install xquartz
+  - brew install xquartz
 script:
   - brew install --verbose ./Formula/azpainter.rb
   - open $(brew --prefix azpainter)/AzPainter.app
