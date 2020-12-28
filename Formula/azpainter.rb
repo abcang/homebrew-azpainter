@@ -5,8 +5,14 @@ class Azpainter < Formula
   sha256 "a2147e5b2a35280c8bef2afff5ed78c2fdff92544c6790165599b8bba367588b"
   revision 1
 
+  depends_on "libx11"
+  depends_on "libxext"
+  depends_on "libxi"
+  depends_on "freetype"
+  depends_on "libpng"
+  depends_on "libjpeg"
+  depends_on "fontconfig"
   depends_on "svg2png" => :build
-  depends_on :x11
 
   uses_from_macos "zlib"
 
@@ -26,7 +32,7 @@ class Azpainter < Formula
 
     tmp_icon_png = "/tmp/azpainter_1024.png"
     system "svg2png", "desktop/icons/hicolor/scalable/apps/azpainter.svg", tmp_icon_png
-    mkdir "/tmp/azpainter.iconset"
+    mkdir_p "/tmp/azpainter.iconset"
     system "sips", "-z", "16", "16",   tmp_icon_png, "--out", "/tmp/azpainter.iconset/icon_16x16.png"
     system "sips", "-z", "32", "32",   tmp_icon_png, "--out", "/tmp/azpainter.iconset/icon_16x16@2x.png"
     system "sips", "-z", "32", "32",   tmp_icon_png, "--out", "/tmp/azpainter.iconset/icon_32x32.png"
@@ -40,7 +46,7 @@ class Azpainter < Formula
     system "iconutil", "-c", "icns", "/tmp/azpainter.iconset"
     cp "/tmp/azpainter.icns", "#{app_name}/Contents/Resources/applet.icns"
 
-    rm "-R", "/tmp/azpainter.iconset"
+    rm_rf "/tmp/azpainter.iconset"
     rm "/tmp/azpainter.icns"
     rm tmp_icon_png
 
