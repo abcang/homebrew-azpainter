@@ -1,5 +1,5 @@
 class Azpainter < Formula
-  desc "AzPainter"
+  desc "Full color painting software for Unix-like systems for illustration drawing."
   homepage "https://github.com/abcang/homebrew-azpainter"
   url "https://github.com/Symbian9/azpainter/archive/v2.1.6.tar.gz"
   sha256 "a2147e5b2a35280c8bef2afff5ed78c2fdff92544c6790165599b8bba367588b"
@@ -23,32 +23,34 @@ class Azpainter < Formula
     locale = `defaults read -g AppleLocale | sed 's/@.*$$//g'`.chomp + ".UTF-8"
     system %Q(echo 'do shell script "LANG=#{locale} #{bin}/azpainter >/dev/null 2>&1 &"' | osacompile -o #{app_name})
 
-    system "svg2png", "desktop/icons/hicolor/scalable/apps/azpainter.svg", "/tmp/azpainter_1024.png"
-    system "mkdir", "/tmp/azpainter.iconset"
-    system "sips", "-z", "16", "16",   "/tmp/azpainter_1024.png", "--out", "/tmp/azpainter.iconset/icon_16x16.png"
-    system "sips", "-z", "32", "32",   "/tmp/azpainter_1024.png", "--out", "/tmp/azpainter.iconset/icon_16x16@2x.png"
-    system "sips", "-z", "32", "32",   "/tmp/azpainter_1024.png", "--out", "/tmp/azpainter.iconset/icon_32x32.png"
-    system "sips", "-z", "64", "64",   "/tmp/azpainter_1024.png", "--out", "/tmp/azpainter.iconset/icon_32x32@2x.png"
-    system "sips", "-z", "128", "128", "/tmp/azpainter_1024.png", "--out", "/tmp/azpainter.iconset/icon_128x128.png"
-    system "sips", "-z", "256", "256", "/tmp/azpainter_1024.png", "--out", "/tmp/azpainter.iconset/icon_128x128@2x.png"
-    system "sips", "-z", "256", "256", "/tmp/azpainter_1024.png", "--out", "/tmp/azpainter.iconset/icon_256x256.png"
-    system "sips", "-z", "512", "512", "/tmp/azpainter_1024.png", "--out", "/tmp/azpainter.iconset/icon_256x256@2x.png"
-    system "sips", "-z", "512", "512", "/tmp/azpainter_1024.png", "--out", "/tmp/azpainter.iconset/icon_512x512.png"
-    system "cp", "/tmp/azpainter_1024.png", "/tmp/azpainter.iconset/icon_512x512@2x.png"
+    tmp_icon_png = "/tmp/azpainter_1024.png"
+    system "svg2png", "desktop/icons/hicolor/scalable/apps/azpainter.svg", tmp_icon_png
+    mkdir "/tmp/azpainter.iconset"
+    system "sips", "-z", "16", "16",   tmp_icon_png, "--out", "/tmp/azpainter.iconset/icon_16x16.png"
+    system "sips", "-z", "32", "32",   tmp_icon_png, "--out", "/tmp/azpainter.iconset/icon_16x16@2x.png"
+    system "sips", "-z", "32", "32",   tmp_icon_png, "--out", "/tmp/azpainter.iconset/icon_32x32.png"
+    system "sips", "-z", "64", "64",   tmp_icon_png, "--out", "/tmp/azpainter.iconset/icon_32x32@2x.png"
+    system "sips", "-z", "128", "128", tmp_icon_png, "--out", "/tmp/azpainter.iconset/icon_128x128.png"
+    system "sips", "-z", "256", "256", tmp_icon_png, "--out", "/tmp/azpainter.iconset/icon_128x128@2x.png"
+    system "sips", "-z", "256", "256", tmp_icon_png, "--out", "/tmp/azpainter.iconset/icon_256x256.png"
+    system "sips", "-z", "512", "512", tmp_icon_png, "--out", "/tmp/azpainter.iconset/icon_256x256@2x.png"
+    system "sips", "-z", "512", "512", tmp_icon_png, "--out", "/tmp/azpainter.iconset/icon_512x512.png"
+    cp tmp_icon_png, "/tmp/azpainter.iconset/icon_512x512@2x.png"
     system "iconutil", "-c", "icns", "/tmp/azpainter.iconset"
-    system "cp", "/tmp/azpainter.icns", "#{app_name}/Contents/Resources/applet.icns"
+    cp "/tmp/azpainter.icns", "#{app_name}/Contents/Resources/applet.icns"
 
-    system "rm", "-R", "/tmp/azpainter.iconset"
-    system "rm", "/tmp/azpainter.icns"
-    system "rm", "/tmp/azpainter_1024.png"
+    rm "-R", "/tmp/azpainter.iconset"
+    rm "/tmp/azpainter.icns"
+    rm tmp_icon_png
 
     prefix.install app_name
   end
 
-  def caveats; <<~EOS
-    Please execute this command to register to Launchpad.
-      ln -sf $(brew --prefix azpainter)/AzPainter.app /Applications/
-  EOS
+  def caveats
+    <<~EOS
+      Please execute this command to register to Launchpad.
+        ln -sf $(brew --prefix azpainter)/AzPainter.app /Applications/
+    EOS
   end
 
   test do
