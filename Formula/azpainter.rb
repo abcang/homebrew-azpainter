@@ -5,13 +5,15 @@ class Azpainter < Formula
   sha256 "a2147e5b2a35280c8bef2afff5ed78c2fdff92544c6790165599b8bba367588b"
   revision 1
 
-  depends_on "libx11"
-  depends_on "libxext"
-  depends_on "libxi"
-  depends_on "freetype"
+  # When using libx11, "malloc: *** error for object 0x27: pointer being freed was not allocated" occurs
+  # depends_on "libx11"
+  # depends_on "libxext"
+  # depends_on "libxi"
+  # depends_on "freetype"
+  # depends_on "fontconfig"
+
   depends_on "libpng"
   depends_on "libjpeg"
-  depends_on "fontconfig"
   depends_on "svg2png" => :build
 
   uses_from_macos "zlib"
@@ -22,6 +24,10 @@ class Azpainter < Formula
   end
 
   def install
+    ENV.prepend_path "HOMEBREW_INCLUDE_PATHS", MacOS::XQuartz.include.to_s
+    ENV.prepend_path "HOMEBREW_INCLUDE_PATHS", "#{MacOS::XQuartz.include}/freetype2"
+    ENV.prepend_path "HOMEBREW_LIBRARY_PATHS", MacOS::XQuartz.lib.to_s
+
     system "./configure", "--prefix=#{prefix}"
     system "make"
     system "make", "install"
