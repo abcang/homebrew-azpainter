@@ -1,43 +1,39 @@
 class Azpainter < Formula
   desc 'Full color painting software for Unix-like systems for illustration drawing.'
   homepage 'https://github.com/abcang/homebrew-azpainter'
-  url 'https://github.com/Symbian9/azpainter/archive/v2.1.6.tar.gz'
-  sha256 'a2147e5b2a35280c8bef2afff5ed78c2fdff92544c6790165599b8bba367588b'
+  url 'https://gitlab.com/azelpg/azpainter/-/archive/v3.0.8/azpainter-v3.0.8.tar.gz'
+  sha256 '5751dd6e7bc9110c9bdefe453833f5a44e091b1266def3fd125d5c427512033b'
   revision 1
 
-  # When using libx11, "malloc: *** error for object 0x27: pointer being freed was not allocated" occurs
-  # depends_on "libx11"
-  # depends_on "libxext"
-  # depends_on "libxi"
-  # depends_on "freetype"
-  # depends_on "fontconfig"
-
   depends_on 'libpng'
-  depends_on 'libjpeg'
+  depends_on 'jpeg-turbo'
+  depends_on 'libtiff'
+  depends_on 'webp'
   depends_on 'svg2png' => :build
-
-  uses_from_macos 'zlib'
-
-  patch :p0 do
-    url 'https://gist.githubusercontent.com/abcang/a59322e115659d5948a849eaf745b916/raw/1a51bce4c7ee8e1b364e0c16a89309b92dc76339/azpainter.diff'
-    sha256 '8a5651b330e526b4d31435d472f8dbb02d355c86d71ee7ace0dfb7bf95a2acca'
-  end
+  depends_on 'ninja' => :build
+  depends_on 'pkg-config' => :build
 
   def install
-    ENV.prepend_path 'HOMEBREW_INCLUDE_PATHS', MacOS::XQuartz.include.to_s
-    ENV.prepend_path 'HOMEBREW_INCLUDE_PATHS', "#{MacOS::XQuartz.include}/freetype2"
-    ENV.prepend_path 'HOMEBREW_LIBRARY_PATHS', MacOS::XQuartz.lib.to_s
+    # NOTE: https://github.com/Homebrew/brew/commit/4836ea0ba2119619697af87edf5fdb2280e90238
+    ENV.append_path 'PKG_CONFIG_PATH', '/opt/X11/lib/pkgconfig'
+    ENV.prepend_path 'HOMEBREW_INCLUDE_PATHS', '/opt/X11/include'
+    ENV.prepend_path 'HOMEBREW_INCLUDE_PATHS', '/opt/X11/include/freetype2'
+    ENV.prepend_path 'HOMEBREW_LIBRARY_PATHS', '/opt/X11/lib'
 
-    system './configure', "--prefix=#{prefix}"
-    system 'make'
-    system 'make', 'install'
+    system 'sed', '-i', '.bak', '/gtk-update-icon-cache/d; /update-desktop-database/d; /update-mime-database/d',
+           'install.sh.in'
+    system './configure', "--prefix=#{prefix}", 'LIBS=-lxi'
+    cd 'build' do
+      system 'ninja'
+      system 'ninja', 'install'
+    end
 
-    app_name = `sed -n '/^Name=/s///p' desktop/applications/azpainter.desktop`.chomp + '.app'
+    app_name = `sed -n '/^Name=/s///p' desktop/azpainter.desktop`.chomp + '.app'
     locale = `defaults read -g AppleLocale | sed 's/@.*$$//g'`.chomp + '.UTF-8'
     system %(echo 'do shell script "LANG=#{locale} #{bin}/azpainter >/dev/null 2>&1 &"' | osacompile -o #{app_name})
 
     tmp_icon_png = '/tmp/azpainter_1024.png'
-    system 'svg2png', 'desktop/icons/hicolor/scalable/apps/azpainter.svg', tmp_icon_png
+    system 'svg2png', 'desktop/azpainter.svg', tmp_icon_png
     mkdir_p '/tmp/azpainter.iconset'
     system 'sips', '-z', '16', '16',   tmp_icon_png, '--out', '/tmp/azpainter.iconset/icon_16x16.png'
     system 'sips', '-z', '32', '32',   tmp_icon_png, '--out', '/tmp/azpainter.iconset/icon_16x16@2x.png'
