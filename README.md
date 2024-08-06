@@ -1,7 +1,5 @@
 # homebrew-azpainter
 
-[![Build Status](https://travis-ci.com/abcang/homebrew-azpainter.svg?branch=master)](https://travis-ci.com/abcang/homebrew-azpainter)
-
 Original repository: [https://gitlab.com/azelpg/azpainter](https://gitlab.com/azelpg/azpainter)
 
 ## Install
