@@ -14,5 +14,5 @@ ln -sf $(brew --prefix azpainter)/AzPainter.app /Applications/
 ## Development
 
 ```bash
-brew install --build-from-source --debug Formula/azpainter.rb
+brew install -v --formula Formula/azpainter.rb
 ```
