@@ -3,7 +3,7 @@ class Azpainter < Formula
   homepage 'https://github.com/abcang/homebrew-azpainter'
   url 'https://gitlab.com/azelpg/azpainter/-/archive/v3.0.8/azpainter-v3.0.8.tar.gz'
   sha256 '5751dd6e7bc9110c9bdefe453833f5a44e091b1266def3fd125d5c427512033b'
-  revision 1
+  revision 2
 
   depends_on 'libpng'
   depends_on 'jpeg-turbo'
@@ -30,7 +30,8 @@ class Azpainter < Formula
 
     app_name = `sed -n '/^Name=/s///p' desktop/azpainter.desktop`.chomp + '.app'
     locale = `defaults read -g AppleLocale | sed 's/@.*$$//g'`.chomp + '.UTF-8'
-    system %(echo 'do shell script "LANG=#{locale} #{bin}/azpainter >/dev/null 2>&1 &"' | osacompile -o #{app_name})
+    # For some reason, translation files and icons cannot be loaded unless MLK_APPDATADIR is specified.
+    system %(echo 'do shell script "LANG=#{locale} MLK_APPDATADIR=#{prefix}/share/azpainter3 #{bin}/azpainter >/dev/null 2>&1 &"' | osacompile -o #{app_name})
 
     tmp_icon_png = '/tmp/azpainter_1024.png'
     system 'svg2png', 'desktop/azpainter.svg', tmp_icon_png
